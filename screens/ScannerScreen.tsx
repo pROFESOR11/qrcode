@@ -62,20 +62,19 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
           onPress={() => setisScanActive(true)}
         />
       )}
-      <ScrollView>
-        {isScanActive && (
-          <BarCodeScanner
-            onBarCodeScanned={handleBarCodeScanned}
-            style={StyleSheet.absoluteFillObject}
-          />
-        )}
 
-        {__DEV__ && isScanActive && (
-          <Button title="Mock QR Scan" onPress={mockQRScan} />
-        )}
+      {isScanActive && (
+        <BarCodeScanner
+          onBarCodeScanned={handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+      )}
 
-        {!isScanActive && scannedQR && <ScanResult scanResult={scannedQR} />}
-      </ScrollView>
+      {__DEV__ && isScanActive && (
+        <Button title="Mock QR Scan" onPress={mockQRScan} />
+      )}
+
+      {!isScanActive && scannedQR && <ScanResult scanResult={scannedQR} />}
     </SafeAreaView>
   );
 };
