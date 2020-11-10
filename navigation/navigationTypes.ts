@@ -1,21 +1,22 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { BarCodeEvent } from "expo-barcode-scanner";
 
 type ScanStackParamList = {
-  Landing: undefined;
-  Scanner: undefined;
+  Scan: undefined;
+  ScanResult: {
+    barcodeEvent?: BarCodeEvent;
+  };
 };
 
-export type LandingScreenRouteProp = RouteProp<ScanStackParamList, "Landing">;
+export type ScanScreenRouteProp = RouteProp<ScanStackParamList, "Scan">;
 
-export type LandingScreenNavigationProp = StackNavigationProp<
+export type ScanScreenNavigationProp = StackNavigationProp<
   ScanStackParamList,
-  "Landing"
+  "Scan"
 >;
 
-export type ScannerScreenRouteProp = RouteProp<ScanStackParamList, "Scanner">;
-
-export type ScannerScreenNavigationProp = StackNavigationProp<
+export type ScanResultScreenRouteProp = RouteProp<
   ScanStackParamList,
-  "Scanner"
+  "ScanResult"
 >;
