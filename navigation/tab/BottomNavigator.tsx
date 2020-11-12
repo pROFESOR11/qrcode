@@ -5,6 +5,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { FavouritesScreen } from "../../screens/FavouritesScreen";
 import HistoryStack from "../stack/HistoryStack";
 import ScannerStack from "../stack/ScannerStack";
+import theme from "../../theme";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -12,10 +13,10 @@ export function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       tabBarOptions={{
-        activeTintColor: "#4498D2",
-        inactiveBackgroundColor: "#4AA0DD",
-        activeBackgroundColor: "#23638E",
-        inactiveTintColor: "#FFFFFF",
+        activeTintColor: theme.primaryLight,
+        inactiveBackgroundColor: theme.primary,
+        activeBackgroundColor: theme.primaryDark,
+        inactiveTintColor: theme.white,
         showLabel: false,
       }}
     >
