@@ -37,3 +37,18 @@ export type HistoryScreenNavigationProp = StackNavigationProp<
   HistoryStackParamList,
   "History"
 >;
+
+export type FavouritesStackParamList = {
+  Favourites: {
+    editMode?: boolean;
+  };
+};
+
+export type FavouritesScreenRouteProp = RouteProp<
+  FavouritesStackParamList,
+  "Favourites"
+>;
+export type FavouritesScreenNavigationProp = StackNavigationProp<
+  FavouritesStackParamList,
+  "Favourites"
+>;
