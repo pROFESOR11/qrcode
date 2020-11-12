@@ -21,9 +21,13 @@ const renderItemIcon = (item: AsyncStorageBarcodeEvent) => {
 
 interface HistoryItemProps {
   item: AsyncStorageBarcodeEvent;
+  editable?: boolean;
 }
 
-export const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
+export const HistoryItem: React.FC<HistoryItemProps> = ({
+  item,
+  editable = false,
+}) => {
   return (
     <ListItem bottomDivider>
       {renderItemIcon(item)}
