@@ -56,8 +56,10 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({}) => {
       <FlatList
         stickyHeaderIndices={[0]}
         ListEmptyComponent={
-          <View>
-            <Text style={styles.listEmptyText}>No history yet</Text>
+          <View style={styles.listEmptyContainer}>
+            <Text style={styles.listEmptyText}>
+              {isFilterActive ? "No item with this filter.." : "No history yet"}
+            </Text>
           </View>
         }
         ListHeaderComponent={
@@ -103,8 +105,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  listEmptyContainer: {
+    marginTop: 20,
+  },
   listEmptyText: {
     textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
     color: theme.primaryDark,
   },
 });
