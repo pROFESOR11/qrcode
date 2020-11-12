@@ -58,7 +58,9 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({}) => {
         ListEmptyComponent={
           <View style={styles.listEmptyContainer}>
             <Text style={styles.listEmptyText}>
-              {isFilterActive ? "No item with this filter.." : "No history yet"}
+              {isFilterActive
+                ? "No item with this filter.."
+                : "No history yet.."}
             </Text>
           </View>
         }
