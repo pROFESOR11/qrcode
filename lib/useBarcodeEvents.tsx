@@ -1,12 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
+import { parseBarcode } from "../utils/parseBarcode";
 
 export interface AsyncStorageBarcodeEvent {
   key: string;
-  value: string | null;
+  value: string;
 }
 
-export function useBarcodeEvents(trigger: boolean) {
+export function useBarcodeEvents(trigger: boolean, getOnlyFavourites = false) {
   const [barcodeEvents, setbarcodeEvents] = useState<
     AsyncStorageBarcodeEvent[]
   >();
@@ -22,10 +23,21 @@ export function useBarcodeEvents(trigger: boolean) {
           const _data = await AsyncStorage.multiGet(keys);
           _data.map((entry) => {
             const [key, value] = entry;
-            data.push({
-              key,
-              value,
-            });
+            if (!value) return;
+            if (getOnlyFavourites) {
+              const item = parseBarcode(key, value);
+              if (item.isFavourite) {
+                data.push({
+                  key,
+                  value,
+                });
+              }
+            } else {
+              data.push({
+                key,
+                value,
+              });
+            }
           });
         }
         setbarcodeEvents(data);
