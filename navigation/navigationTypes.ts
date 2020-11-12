@@ -2,8 +2,10 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarCodeEvent } from "expo-barcode-scanner";
 
-type ScanStackParamList = {
-  Scan: undefined;
+export type ScanStackParamList = {
+  Scan: {
+    cameraType?: "front" | "back";
+  };
   ScanResult: {
     barcodeEvent?: BarCodeEvent;
   };
@@ -19,4 +21,19 @@ export type ScanScreenNavigationProp = StackNavigationProp<
 export type ScanResultScreenRouteProp = RouteProp<
   ScanStackParamList,
   "ScanResult"
+>;
+
+export type HistoryStackParamList = {
+  History: {
+    editMode?: boolean;
+  };
+};
+
+export type HistoryScreenRouteProp = RouteProp<
+  HistoryStackParamList,
+  "History"
+>;
+export type HistoryScreenNavigationProp = StackNavigationProp<
+  HistoryStackParamList,
+  "History"
 >;
