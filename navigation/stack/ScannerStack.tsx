@@ -3,12 +3,17 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { ScannerScreen } from "../../screens/ScannerScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ScanResultScreen } from "../../screens/ScanResultScreen";
 import defaultOptions from "./defaultStackOptions";
+import {
+  ScanScreenNavigationProp,
+  ScanScreenRouteProp,
+  ScanStackParamList,
+} from "../navigationTypes";
+import { Icon } from "react-native-elements";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<ScanStackParamList>();
 
 const ScannerStack: React.FC = () => {
   return (
@@ -16,32 +21,47 @@ const ScannerStack: React.FC = () => {
       <Stack.Screen
         name="Scan"
         component={ScannerScreen}
-        options={{
+        options={({
+          route,
+          navigation,
+        }: {
+          navigation: ScanScreenNavigationProp;
+          route: ScanScreenRouteProp;
+        }) => ({
           headerLeft: (props) => (
             <View style={styles.headerLeft}>
-              <MaterialCommunityIcons
+              <Icon
+                type="material-community"
                 style={styles.headerLeftIcon}
                 name="flashlight"
                 size={30}
                 color="white"
               />
-              <Ionicons
+              <Icon
+                type="ionicon"
                 name="md-reverse-camera"
                 size={30}
                 color="white"
                 style={styles.headerLeftIcon}
+                onPress={() =>
+                  navigation.setParams({
+                    cameraType:
+                      route.params?.cameraType === "front" ? "back" : "front",
+                  })
+                }
               />
             </View>
           ),
           headerRight: (props) => (
-            <FontAwesome5
+            <Icon
+              type="font-awesome-5"
               name="question-circle"
               size={30}
               color="white"
               style={styles.headerRightIcon}
             />
           ),
-        }}
+        })}
       />
       <Stack.Screen component={ScanResultScreen} name="ScanResult" />
     </Stack.Navigator>
