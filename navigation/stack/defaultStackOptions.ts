@@ -1,15 +1,17 @@
+import theme from "../../theme";
+
 export default {
   screenOptions: {
     headerTitleStyle: {
-      color: "white",
+      color: theme.white,
       fontSize: 22,
     },
     headerStyle: {
-      backgroundColor: "#4AA0DD",
+      backgroundColor: theme.primary,
     },
     headerBackTitleStyle: {
-      color: "white",
+      color: theme.white,
     },
-    headerTintColor: "white",
+    headerTintColor: theme.white,
   },
 };
