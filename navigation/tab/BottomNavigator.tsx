@@ -5,6 +5,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { FavouritesScreen } from "../../screens/FavouritesScreen";
 import HistoryStack from "../stack/HistoryStack";
 import ScannerStack from "../stack/ScannerStack";
+import FavouritesStack from "../stack/FavouritesStack";
 import theme from "../../theme";
 
 const BottomTab = createBottomTabNavigator();
@@ -41,7 +42,7 @@ export function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Favourites"
-        component={FavouritesScreen}
+        component={FavouritesStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <FontAwesome name="star" size={size} color={color} />
