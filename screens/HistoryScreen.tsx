@@ -28,9 +28,15 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({}) => {
     AsyncStorageBarcodeEvent[]
   >();
 
+  const [nrOfRenders, setnrOfRenders] = useState(0);
+
   // refetch history on focus
   const isFocused = useIsFocused();
-  const barcodeHistory = useBarcodeEvents(isFocused);
+  useEffect(() => {
+    if (isFocused) setnrOfRenders((i) => i + 1);
+  }, [isFocused]);
+
+  const barcodeHistory = useBarcodeEvents(nrOfRenders);
 
   // raw user input
   const [searchTerm, setsearchTerm] = useState("");
@@ -89,7 +95,11 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({}) => {
         }
         data={isFilterActive ? filteredBarcodeEvents : barcodeHistory}
         renderItem={({ item }) => (
-          <HistoryItem item={item} editable={route.params?.editMode || false} />
+          <HistoryItem
+            item={item}
+            editable={route.params?.editMode || false}
+            setnrOfRenders={setnrOfRenders}
+          />
         )}
       />
       {__DEV__ && (
