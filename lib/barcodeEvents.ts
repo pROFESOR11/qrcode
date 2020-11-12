@@ -7,7 +7,7 @@ export function saveBarcodeEvent(barcodeEvent: BarCodeEvent) {
   try {
     AsyncStorage.setItem(
       uuidv4(),
-      JSON.stringify({ data, type, date: new Date() })
+      JSON.stringify({ data, type, isFavourite: false, date: new Date() })
     );
   } catch (error) {
     console.log("error", error);
