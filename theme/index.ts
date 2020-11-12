@@ -5,4 +5,6 @@ export default {
   secondary: "#3D759B",
   white: "#FFFFFF",
   greyish: "#FAFAFA",
+  favourite: "#FFAC20",
+  delete: "#CC6166",
 };
