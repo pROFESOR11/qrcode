@@ -7,14 +7,16 @@ export interface AsyncStorageBarcodeEvent {
   value: string;
 }
 
-export function useBarcodeEvents(trigger: boolean, getOnlyFavourites = false) {
+export function useBarcodeEvents(
+  nrOfRenders: number,
+  getOnlyFavourites = false
+) {
   const [barcodeEvents, setbarcodeEvents] = useState<
     AsyncStorageBarcodeEvent[]
   >();
 
   useEffect(() => {
     (async function () {
-      if (!trigger) return;
       let keys = [];
       let data: AsyncStorageBarcodeEvent[] = [];
       try {
@@ -45,7 +47,7 @@ export function useBarcodeEvents(trigger: boolean, getOnlyFavourites = false) {
         console.log("error", error);
       }
     })();
-  }, [trigger]);
+  }, [nrOfRenders]);
 
   return barcodeEvents;
 }
