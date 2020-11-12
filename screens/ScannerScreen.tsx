@@ -5,14 +5,21 @@ import { saveBarcodeEvent } from "../lib/barcodeEvents";
 import mockBarcodes from "../mock/mockBarcodes";
 import { ScanResult } from "../components/ScanResult";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import theme from "../theme";
+import {
+  ScanScreenNavigationProp,
+  ScanScreenRouteProp,
+} from "../navigation/navigationTypes";
 
 interface ScannerScreenProps {}
 
 export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [isScanActive, setisScanActive] = useState(true);
-  const [scannedQR, setscannedQR] = useState<BarCodeEvent>();
+
+  const navigation = useNavigation<ScanScreenNavigationProp>();
+
+  const route = useRoute<ScanScreenRouteProp>();
 
   useEffect(() => {
     (async () => {
@@ -23,9 +30,10 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
 
   const handleBarCodeScanned = (barcodeEvent: BarCodeEvent) => {
     try {
-      setscannedQR(barcodeEvent);
-      setisScanActive(false);
       saveBarcodeEvent(barcodeEvent);
+      navigation.navigate("ScanResult", {
+        barcodeEvent,
+      });
     } catch (err) {
       console.log("err", err);
     }
@@ -50,31 +58,46 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
   }
 
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         flexDirection: "column",
+        justifyContent: "flex-end",
       }}
     >
-      {!isScanActive && (
-        <Button
-          title={"Tap to Scan Again"}
-          onPress={() => setisScanActive(true)}
-        />
-      )}
-
-      {isScanActive && (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
         <BarCodeScanner
           onBarCodeScanned={handleBarCodeScanned}
+          type={route.params?.cameraType || "back"}
           style={StyleSheet.absoluteFillObject}
         />
-      )}
 
-      {__DEV__ && isScanActive && (
-        <Button title="Mock QR Scan" onPress={mockQRScan} />
-      )}
-
-      {!isScanActive && scannedQR && <ScanResult scanResult={scannedQR} />}
-    </SafeAreaView>
+        <View style={{ backgroundColor: "rgba(178, 178, 178, 0.5)" }}>
+          <Text
+            style={{ padding: 10, textAlign: "center", color: theme.greyish }}
+          >
+            Hold over a barcode or QR code
+          </Text>
+          {__DEV__ && (
+            <Text
+              style={{
+                padding: 10,
+                textAlign: "center",
+                color: theme.primaryDark,
+              }}
+              onPress={mockQRScan}
+            >
+              Mock QR Code
+            </Text>
+          )}
+        </View>
+      </View>
+    </View>
   );
 };
