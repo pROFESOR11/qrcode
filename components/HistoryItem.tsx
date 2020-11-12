@@ -24,18 +24,16 @@ const renderItemIcon = (item: AsyncStorageBarcodeEvent) => {
 interface HistoryItemProps {
   item: AsyncStorageBarcodeEvent;
   editable?: boolean;
+  setnrOfRenders: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const HistoryItem: React.FC<HistoryItemProps> = ({
   item,
   editable = false,
+  setnrOfRenders,
 }) => {
   const [isDeleted, setisDeleted] = React.useState(false);
   const historyItem = parseBarcode(item.key, item.value);
-
-  const [isFavouriteTemp, setisFavouriteTemp] = React.useState<Boolean>(
-    historyItem.isFavourite || false
-  );
 
   if (isDeleted) return <View />;
 
@@ -56,16 +54,18 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
               name="star"
               type="antdesign"
               size={30}
-              color={isFavouriteTemp ? theme.favourite : theme.secondary}
-              onPress={() => {
-                setisFavouriteTemp((isFavouriteTemp) => !isFavouriteTemp);
-                AsyncStorage.mergeItem(
+              color={
+                historyItem.isFavourite ? theme.favourite : theme.secondary
+              }
+              onPress={async () => {
+                await AsyncStorage.mergeItem(
                   historyItem.key,
                   JSON.stringify({
                     ...historyItem,
                     isFavourite: historyItem.isFavourite ? false : true,
                   })
                 );
+                setnrOfRenders((i) => i + 1);
               }}
             />
             <Icon
