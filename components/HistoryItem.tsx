@@ -1,8 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Icon, ListItem } from "react-native-elements";
 import { AsyncStorageBarcodeEvent } from "../lib/useBarcodeEvents";
 import theme from "../theme";
+import { parseBarcode } from "../utils/parseBarcode";
 
 const renderItemIcon = (item: AsyncStorageBarcodeEvent) => {
   return (
@@ -28,58 +30,93 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
   item,
   editable = false,
 }) => {
+  const [isDeleted, setisDeleted] = React.useState(false);
+  const historyItem = parseBarcode(item.key, item.value);
+
+  const [isFavouriteTemp, setisFavouriteTemp] = React.useState<Boolean>(
+    historyItem.isFavourite || false
+  );
+
+  if (isDeleted) return <View />;
+
   return (
     <ListItem bottomDivider>
       {renderItemIcon(item)}
-
       <ListItem.Content>
-        <ListItem.Title>Barcode</ListItem.Title>
-        <ListItem.Subtitle style={{ fontWeight: "bold" }}>
-          7257969970556
+        <ListItem.Title>{historyItem.type}</ListItem.Title>
+        <ListItem.Subtitle style={styles.subtitle}>
+          {historyItem.data}
         </ListItem.Subtitle>
       </ListItem.Content>
       <ListItem.Content right>
-        <Text style={{ color: theme.primary }}>12/29/2014</Text>
+        {editable ? (
+          <View style={styles.editActionsContainer}>
+            <Icon
+              style={styles.editActionLeft}
+              name="star"
+              type="antdesign"
+              size={30}
+              color={isFavouriteTemp ? theme.favourite : theme.secondary}
+              onPress={() => {
+                setisFavouriteTemp((isFavouriteTemp) => !isFavouriteTemp);
+                AsyncStorage.mergeItem(
+                  historyItem.key,
+                  JSON.stringify({
+                    ...historyItem,
+                    isFavourite: historyItem.isFavourite ? false : true,
+                  })
+                );
+              }}
+            />
+            <Icon
+              name="delete"
+              type="material"
+              size={30}
+              color={theme.delete}
+              onPress={() => {
+                Alert.alert(
+                  "Are you sure?",
+                  "This is an unreversable operation. It will be deleted forever..",
+                  [
+                    {
+                      text: "Yes",
+                      style: "destructive",
+                      onPress: () => {
+                        AsyncStorage.removeItem(historyItem.key);
+                        setisDeleted(true);
+                      },
+                    },
+                    {
+                      text: "Cancel",
+                      style: "cancel",
+                    },
+                  ]
+                );
+              }}
+            />
+          </View>
+        ) : (
+          <Text style={styles.dateText}>
+            {new Date(historyItem.date)?.toLocaleDateString()}
+          </Text>
+        )}
       </ListItem.Content>
     </ListItem>
-    // <View style={styles.container}>
-    //   <View style={styles.leftContainer}>
-    //     {renderItemIcon(item)}
-    //     <View style={styles.details}>
-    //       <Text>Barcode</Text>
-    //       <View style={styles.data}>
-    //         <Text>data here</Text>
-    //       </View>
-    //     </View>
-    //   </View>
-    //   <View style={styles.rightContainer}>
-    //     <Text>date here</Text>
-    //   </View>
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
+  subtitle: {
+    fontWeight: "bold",
   },
-  leftContainer: {
-    padding: 2,
+  editActionsContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
-  details: {
-    padding: 2,
-    marginLeft: 10,
-    flexDirection: "column",
-    overflow: "hidden",
+  editActionLeft: {
+    marginRight: 10,
   },
-  data: {
-    marginTop: 5,
-  },
-  rightContainer: {
-    alignItems: "flex-start",
+  dateText: {
+    color: theme.primary,
   },
 });
