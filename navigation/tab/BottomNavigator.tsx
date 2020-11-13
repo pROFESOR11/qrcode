@@ -1,8 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HistoryScreen } from "../../screens/HistoryScreen";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { FavouritesScreen } from "../../screens/FavouritesScreen";
 import HistoryStack from "../stack/HistoryStack";
 import ScannerStack from "../stack/ScannerStack";
 import FavouritesStack from "../stack/FavouritesStack";

@@ -12,6 +12,7 @@ import {
   ScanStackParamList,
 } from "../navigationTypes";
 import { Icon } from "react-native-elements";
+import { DrawerActions } from "@react-navigation/native";
 
 const Stack = createStackNavigator<ScanStackParamList>();
 
@@ -29,7 +30,7 @@ const ScannerStack: React.FC = () => {
           route: ScanScreenRouteProp;
         }) => ({
           headerLeft: (props) => (
-            <View style={styles.headerLeft}>
+            <View style={styles.headerContainer}>
               <Icon
                 type="material-community"
                 style={styles.headerLeftIcon}
@@ -58,13 +59,24 @@ const ScannerStack: React.FC = () => {
             </View>
           ),
           headerRight: (props) => (
-            <Icon
-              type="font-awesome-5"
-              name="question-circle"
-              size={30}
-              color="white"
-              style={styles.headerRightIcon}
-            />
+            <View style={styles.headerContainer}>
+              <Icon
+                type="font-awesome-5"
+                name="question-circle"
+                size={30}
+                color="white"
+                style={styles.headerRightIcon}
+              />
+              <Icon
+                name="more"
+                size={30}
+                color="white"
+                style={styles.headerRightIcon}
+                onPress={() =>
+                  navigation.dispatch(DrawerActions.toggleDrawer())
+                }
+              />
+            </View>
           ),
         })}
       />
@@ -74,7 +86,7 @@ const ScannerStack: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  headerLeft: {
+  headerContainer: {
     flexDirection: "row",
   },
   headerLeftIcon: {
