@@ -5,6 +5,7 @@ import { BarCodeEvent } from "expo-barcode-scanner";
 export type ScanStackParamList = {
   Scan: {
     cameraType?: "front" | "back";
+    isTorchOn?: boolean;
   };
   ScanResult: {
     barcodeEvent?: BarCodeEvent;

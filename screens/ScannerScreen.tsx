@@ -5,12 +5,17 @@ import { saveBarcodeEvent } from "../lib/barcodeEvents";
 import mockBarcodes from "../mock/mockBarcodes";
 import { ScanResult } from "../components/ScanResult";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import theme from "../theme";
 import {
   ScanScreenNavigationProp,
   ScanScreenRouteProp,
 } from "../navigation/navigationTypes";
+import { Camera } from "expo-camera";
 
 interface ScannerScreenProps {}
 
@@ -18,6 +23,8 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
   const navigation = useNavigation<ScanScreenNavigationProp>();
+
+  const isFocussed = useIsFocused();
 
   const route = useRoute<ScanScreenRouteProp>();
 
@@ -72,11 +79,14 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
           justifyContent: "flex-end",
         }}
       >
-        <BarCodeScanner
-          onBarCodeScanned={handleBarCodeScanned}
-          type={route.params?.cameraType || "back"}
-          style={StyleSheet.absoluteFillObject}
-        />
+        {isFocussed && (
+          <Camera
+            flashMode={route.params?.isTorchOn ? "torch" : undefined}
+            onBarCodeScanned={handleBarCodeScanned}
+            type={route.params?.cameraType || "back"}
+            style={StyleSheet.absoluteFillObject}
+          />
+        )}
 
         <View style={{ backgroundColor: "rgba(178, 178, 178, 0.5)" }}>
           <Text

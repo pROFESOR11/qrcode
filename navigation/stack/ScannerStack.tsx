@@ -36,6 +36,11 @@ const ScannerStack: React.FC = () => {
                 name="flashlight"
                 size={30}
                 color="white"
+                onPress={() => {
+                  navigation.setParams({
+                    isTorchOn: route.params?.isTorchOn ? false : true,
+                  });
+                }}
               />
               <Icon
                 type="ionicon"
