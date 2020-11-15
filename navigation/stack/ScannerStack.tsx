@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking } from "react-native";
 import { ScannerScreen } from "../../screens/ScannerScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -11,7 +11,7 @@ import {
   ScanScreenRouteProp,
   ScanStackParamList,
 } from "../navigationTypes";
-import { Icon } from "react-native-elements";
+import { Button, Icon } from "react-native-elements";
 import { DrawerActions } from "@react-navigation/native";
 
 const Stack = createStackNavigator<ScanStackParamList>();
@@ -59,24 +59,13 @@ const ScannerStack: React.FC = () => {
             </View>
           ),
           headerRight: (props) => (
-            <View style={styles.headerContainer}>
-              <Icon
-                type="font-awesome-5"
-                name="question-circle"
-                size={30}
-                color="white"
-                style={styles.headerRightIcon}
-              />
-              <Icon
-                name="more"
-                size={30}
-                color="white"
-                style={styles.headerRightIcon}
-                onPress={() =>
-                  navigation.dispatch(DrawerActions.toggleDrawer())
-                }
-              />
-            </View>
+            <Icon
+              type="font-awesome-5"
+              name="question-circle"
+              size={30}
+              color="white"
+              style={styles.headerRightIcon}
+            />
           ),
         })}
       />
