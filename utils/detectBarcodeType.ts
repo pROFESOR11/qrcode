@@ -1,6 +1,6 @@
 import { UrlTile } from "react-native-maps";
 
-type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T[keyof T];
 type KeysEnum<T> = { [P in keyof Required<T>]: true };
 
 type BarcodeTypeSms = {
@@ -28,7 +28,7 @@ type BarcodeTypeCalendar = Partial<{
   description: string;
 }>;
 
-type BarcodeTypeVcard = Partial<{
+export type BarcodeTypeVcard = Partial<{
   type: "BARCODE_TYPE_VCARD";
   n: string;
   org: string;
@@ -52,15 +52,16 @@ type BarcodeTypeEmail = {
   emailLinkingUrl: string;
 };
 
-export type DetectedBarcodeTypes = (
+export type DetectedBarcodeType =
   | BarcodeTypeSms
   | BarcodeTypePhone
   | BarcodeTypeUrl
   | BarcodeTypeCalendar
   | BarcodeTypeVcard
   | BarcodeTypeGeo
-  | BarcodeTypeEmail
-)[];
+  | BarcodeTypeEmail;
+
+export type DetectedBarcodeTypes = DetectedBarcodeType[];
 
 export const BARCODE_TYPES = {
   URL: "BARCODE_TYPE_URL",
@@ -162,9 +163,11 @@ export function getPhoneInfo(data: string): BarcodeTypePhone | undefined {
 
 // const data = "smsto:554812542503400:hi,whats up?"
 export function getSmsInfo(data: string): BarcodeTypeSms | undefined {
+  console.log("data", data);
   let smsIndicator = "smsto:";
   let smsIndicatorIndex = data.toLowerCase().indexOf(smsIndicator);
 
+  console.log("smsIndicator", smsIndicator);
   if (smsIndicatorIndex === -1) {
     smsIndicator = "sms:";
     smsIndicatorIndex = data.toLowerCase().indexOf(smsIndicator);
@@ -181,6 +184,7 @@ export function getSmsInfo(data: string): BarcodeTypeSms | undefined {
     smsIndicatorIndex + smsIndicator.length,
     nextSeperatorIndex
   );
+  console.log("phoneNumber", phoneNumber);
   const message = data.substring(
     data.indexOf(phoneNumber) + phoneNumber.length + seperator.length
   );
