@@ -16,6 +16,7 @@ import {
   ScanScreenRouteProp,
 } from "../navigation/navigationTypes";
 import { Camera } from "expo-camera";
+import { detectBarcodeTypes } from "../utils/detectBarcodeType";
 
 interface ScannerScreenProps {}
 
@@ -37,10 +38,16 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
 
   const handleBarCodeScanned = (barcodeEvent: BarCodeEvent) => {
     try {
-      saveBarcodeEvent(barcodeEvent);
-      navigation.navigate("ScanResult", {
-        barcodeEvent,
-      });
+      const detectedBarcodeTypes = detectBarcodeTypes(barcodeEvent.data);
+      const barcodeEventWithTypes = {
+        ...barcodeEvent,
+        details: detectedBarcodeTypes,
+      };
+      const id = saveBarcodeEvent(barcodeEventWithTypes);
+      id &&
+        navigation.navigate("ScanResult", {
+          id,
+        });
     } catch (err) {
       console.log("err", err);
     }
@@ -48,7 +55,9 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({}) => {
 
   async function mockQRScan() {
     try {
-      const _scanned = await BarCodeScanner.scanFromURLAsync(mockBarcodes.test);
+      const _scanned = await BarCodeScanner.scanFromURLAsync(
+        mockBarcodes.qr.sms
+      );
       if (!_scanned) return;
       const scanned = _scanned[0];
       handleBarCodeScanned(scanned);
