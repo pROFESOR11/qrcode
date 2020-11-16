@@ -1,7 +1,10 @@
+import { DetectedBarcodeTypes } from "../utils/detectBarcodeType";
+
 export type ParsedBarcodeEvent = {
-  key: String;
-  data: String;
-  type: String;
-  isFavourite: Boolean;
+  key: string;
+  data: string;
+  type: string;
+  isFavourite: boolean;
   date: Date;
+  details: DetectedBarcodeTypes;
 };
