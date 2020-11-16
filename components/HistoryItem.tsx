@@ -1,50 +1,158 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { List } from "native-base";
 import React from "react";
+import { Linking, Platform } from "react-native";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { Icon, ListItem } from "react-native-elements";
+import { Button, Icon, ListItem } from "react-native-elements";
 import { AsyncStorageBarcodeEvent } from "../lib/useBarcodeEvents";
 import theme from "../theme";
+import { ParsedBarcodeEvent } from "../types/barcodeEvent";
+import { createCalendarEvent } from "../utils/calendar";
+import {
+  DetectedBarcodeType,
+  DetectedBarcodeTypes,
+  getCalendarInfo,
+  ValueOf,
+} from "../utils/detectBarcodeType";
 import { parseBarcode } from "../utils/parseBarcode";
-
-const renderItemIcon = (item: AsyncStorageBarcodeEvent) => {
-  return (
-    <Icon
-      type="material-community"
-      name="barcode"
-      reverse
-      iconStyle={{
-        fontSize: 33,
-      }}
-      color={theme.primary}
-      raised
-    />
-  );
-};
+import { BarcodeTypeIcon } from "./BarcodeTypeIcon";
+import * as SMS from "expo-sms";
+import { createContact } from "../utils/contacts";
+import * as Contacts from "expo-contacts";
+import { uuidv4 } from "../utils/uuid";
 
 interface HistoryItemProps {
-  item: AsyncStorageBarcodeEvent;
+  item?: AsyncStorageBarcodeEvent;
+  parsedItem?: ParsedBarcodeEvent;
   editable?: boolean;
-  setnrOfRenders: React.Dispatch<React.SetStateAction<number>>;
+  setnrOfRenders?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const HistoryItem: React.FC<HistoryItemProps> = ({
   item,
+  parsedItem,
   editable = false,
   setnrOfRenders,
 }) => {
   const [isDeleted, setisDeleted] = React.useState(false);
-  const historyItem = parseBarcode(item.key, item.value);
 
-  if (isDeleted) return <View />;
+  const historyItem =
+    parsedItem || (item && parseBarcode(item?.key, item?.value));
+
+  function renderActionButton(detail: DetectedBarcodeType) {
+    const key = uuidv4();
+    let iconName: string;
+    let iconType: string;
+    let title: string;
+    let onPress: () => void;
+
+    switch (detail.type) {
+      case "BARCODE_TYPE_CALENDAR":
+        iconName = "calendar-plus-o";
+        iconType = "font-awesome";
+        title = "Add To Calendar";
+        onPress = async () =>
+          historyItem?.data &&
+          (await createCalendarEvent(getCalendarInfo(historyItem.data)));
+        break;
+      case "BARCODE_TYPE_EMAIL":
+        iconName = "send";
+        iconType = "font-awesome";
+        title = "Send Email";
+        onPress = () => Linking.openURL(detail.emailLinkingUrl);
+        break;
+      case "BARCODE_TYPE_GEO":
+        iconName = "map-marked";
+        iconType = "font-awesome-5";
+        title = "Open in Maps";
+        onPress = () => {
+          const scheme = Platform.select({
+            ios: "maps:0,0?q=",
+            android: "geo:0,0?q=",
+          });
+          const latLng = `${detail.latitude},${detail.longitude}`;
+          const label = detail.query;
+          const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`,
+          });
+          url && Linking.openURL(url);
+        };
+        break;
+      case "BARCODE_TYPE_PHONE":
+        iconName = "call";
+        iconType = "material";
+        title = "Call";
+        onPress = () => {
+          Linking.openURL(`tel:${detail.phoneNumber}`);
+        };
+        break;
+      case "BARCODE_TYPE_SMS":
+        iconName = "textsms";
+        iconType = "material-icons";
+        title = "SMS";
+        onPress = async () => {
+          const isAvailable = await SMS.isAvailableAsync();
+          if (isAvailable) {
+            SMS.sendSMSAsync(detail.phoneNumber, detail.message);
+          }
+        };
+        break;
+      case "BARCODE_TYPE_URL":
+        iconName = "web";
+        iconType = "material-community";
+        title = "Open Website";
+        onPress = () => {
+          Linking.openURL(detail.url);
+        };
+        break;
+      case "BARCODE_TYPE_VCARD":
+        iconName = "address-card";
+        iconType = "font-awesome";
+        title = "Add to Contacts";
+        onPress = async () => {
+          const isSuccess = await createContact(detail);
+          console.log("isSuccess", isSuccess);
+        };
+        break;
+      default:
+        return <View />;
+    }
+
+    return (
+      <Button
+        key={key}
+        title={title}
+        icon={{
+          name: iconName,
+          type: iconType,
+          size: 30,
+          color: theme.white,
+        }}
+        onPress={onPress}
+      />
+    );
+  }
+
+  function renderActionButtons() {
+    return (
+      <View style={styles.actionsContainer}>
+        {historyItem?.details?.map((detail) => renderActionButton(detail))}
+      </View>
+    );
+  }
+
+  if (isDeleted || !historyItem) return <View />;
 
   return (
     <ListItem bottomDivider>
-      {renderItemIcon(item)}
+      <BarcodeTypeIcon item={""} />
       <ListItem.Content>
         <ListItem.Title>{historyItem.type}</ListItem.Title>
         <ListItem.Subtitle style={styles.subtitle}>
           {historyItem.data}
         </ListItem.Subtitle>
+        {renderActionButtons()}
       </ListItem.Content>
       <ListItem.Content right>
         {editable ? (
@@ -65,7 +173,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
                     isFavourite: historyItem.isFavourite ? false : true,
                   })
                 );
-                setnrOfRenders((i) => i + 1);
+                setnrOfRenders && setnrOfRenders((i) => i + 1);
               }}
             />
             <Icon
@@ -118,5 +226,9 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: theme.primary,
+  },
+  actionsContainer: {
+    flexGrow: 1,
+    flexDirection: "column",
   },
 });
