@@ -1,6 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarCodeEvent } from "expo-barcode-scanner";
+import { DetectedBarcodeTypes } from "../utils/detectBarcodeType";
 
 export type ScanStackParamList = {
   Scan: {
@@ -8,7 +9,7 @@ export type ScanStackParamList = {
     isTorchOn?: boolean;
   };
   ScanResult: {
-    barcodeEvent?: BarCodeEvent;
+    id: string;
   };
 };
 
