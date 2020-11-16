@@ -1,9 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { List } from "native-base";
 import React from "react";
 import { Linking, Platform } from "react-native";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { Button, Icon, ListItem } from "react-native-elements";
+import { Button, Card, Icon, ListItem } from "react-native-elements";
 import { AsyncStorageBarcodeEvent } from "../lib/useBarcodeEvents";
 import theme from "../theme";
 import { ParsedBarcodeEvent } from "../types/barcodeEvent";
@@ -121,12 +120,19 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
 
     return (
       <Button
+        style={{
+          marginHorizontal: 10,
+          marginVertical: 5,
+        }}
         key={key}
         title={title}
+        titleStyle={{
+          fontSize: 12,
+        }}
         icon={{
           name: iconName,
           type: iconType,
-          size: 30,
+          size: 20,
           color: theme.white,
         }}
         onPress={onPress}
@@ -145,76 +151,81 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
   if (isDeleted || !historyItem) return <View />;
 
   return (
-    <ListItem bottomDivider>
-      <BarcodeTypeIcon item={""} />
-      <ListItem.Content>
-        <ListItem.Title>{historyItem.type}</ListItem.Title>
-        <ListItem.Subtitle style={styles.subtitle}>
-          {historyItem.data}
-        </ListItem.Subtitle>
-        {renderActionButtons()}
-      </ListItem.Content>
-      <ListItem.Content right>
-        {editable ? (
-          <View style={styles.editActionsContainer}>
-            <Icon
-              style={styles.editActionLeft}
-              name="star"
-              type="antdesign"
-              size={30}
-              color={
-                historyItem.isFavourite ? theme.favourite : theme.secondary
-              }
-              onPress={async () => {
-                await AsyncStorage.mergeItem(
-                  historyItem.key,
-                  JSON.stringify({
-                    ...historyItem,
-                    isFavourite: historyItem.isFavourite ? false : true,
-                  })
-                );
-                setnrOfRenders && setnrOfRenders((i) => i + 1);
-              }}
-            />
-            <Icon
-              name="delete"
-              type="material"
-              size={30}
-              color={theme.delete}
-              onPress={() => {
-                Alert.alert(
-                  "Are you sure?",
-                  "This is an unreversable operation. It will be deleted forever..",
-                  [
-                    {
-                      text: "Yes",
-                      style: "destructive",
-                      onPress: () => {
-                        AsyncStorage.removeItem(historyItem.key);
-                        setisDeleted(true);
+    <Card containerStyle={{ margin: 10 }}>
+      <ListItem bottomDivider>
+        <BarcodeTypeIcon />
+        <ListItem.Content>
+          <ListItem.Title>{historyItem.type.split(".").pop()}</ListItem.Title>
+          <ListItem.Subtitle style={styles.subtitle}>
+            {historyItem.data}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+
+        <ListItem.Content right>
+          {editable ? (
+            <View style={styles.editActionsContainer}>
+              <Icon
+                style={styles.editActionLeft}
+                name="star"
+                type="antdesign"
+                size={30}
+                color={
+                  historyItem.isFavourite ? theme.favourite : theme.secondary
+                }
+                onPress={async () => {
+                  await AsyncStorage.mergeItem(
+                    historyItem.key,
+                    JSON.stringify({
+                      ...historyItem,
+                      isFavourite: historyItem.isFavourite ? false : true,
+                    })
+                  );
+                  setnrOfRenders && setnrOfRenders((i) => i + 1);
+                }}
+              />
+              <Icon
+                name="delete"
+                type="material"
+                size={30}
+                color={theme.delete}
+                onPress={() => {
+                  Alert.alert(
+                    "Are you sure?",
+                    "This is an unreversable operation. It will be deleted forever..",
+                    [
+                      {
+                        text: "Yes",
+                        style: "destructive",
+                        onPress: () => {
+                          AsyncStorage.removeItem(historyItem.key);
+                          setisDeleted(true);
+                        },
                       },
-                    },
-                    {
-                      text: "Cancel",
-                      style: "cancel",
-                    },
-                  ]
-                );
-              }}
-            />
-          </View>
-        ) : (
-          <Text style={styles.dateText}>
-            {new Date(historyItem.date)?.toLocaleDateString()}
-          </Text>
-        )}
-      </ListItem.Content>
-    </ListItem>
+                      {
+                        text: "Cancel",
+                        style: "cancel",
+                      },
+                    ]
+                  );
+                }}
+              />
+            </View>
+          ) : (
+            <Text style={styles.dateText}>
+              {new Date(historyItem.date)?.toLocaleDateString()}
+            </Text>
+          )}
+        </ListItem.Content>
+      </ListItem>
+      {renderActionButtons()}
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
   subtitle: {
+    marginTop: 3,
+    fontSize: 14,
     fontWeight: "bold",
   },
   editActionsContainer: {
@@ -229,6 +240,9 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     flexGrow: 1,
-    flexDirection: "column",
+    marginTop: 10,
+    justifyContent: "flex-end",
+    flexWrap: "wrap",
+    flexDirection: "row",
   },
 });
