@@ -1,5 +1,3 @@
-import { UrlTile } from "react-native-maps";
-
 export type ValueOf<T> = T[keyof T];
 type KeysEnum<T> = { [P in keyof Required<T>]: true };
 
