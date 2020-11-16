@@ -85,6 +85,9 @@ export const FavouritesScreen: React.FC<HistoryScreenProps> = ({}) => {
               paddingHorizontal: 5,
             }}
             placeholderTextColor="white"
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoCompleteType="off"
             searchIcon={
               <Icon name="search" type="feather" color="white" size={20} />
             }
