@@ -54,3 +54,7 @@ export type FavouritesScreenNavigationProp = StackNavigationProp<
   FavouritesStackParamList,
   "Favourites"
 >;
+
+export type FaqStackParamList = {
+  Faq: undefined;
+};
