@@ -12,7 +12,7 @@ import {
   ScanStackParamList,
 } from "../navigationTypes";
 import { Button, Icon } from "react-native-elements";
-import { DrawerActions } from "@react-navigation/native";
+import { CommonActions } from "@react-navigation/native";
 
 const Stack = createStackNavigator<ScanStackParamList>();
 
@@ -65,6 +65,7 @@ const ScannerStack: React.FC = () => {
               size={30}
               color="white"
               style={styles.headerRightIcon}
+              onPress={() => navigation.dispatch(CommonActions.navigate("Faq"))}
             />
           ),
         })}
