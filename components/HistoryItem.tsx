@@ -58,7 +58,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
         iconName = "send";
         iconType = "font-awesome";
         title = "Send Email";
-        onPress = () => Linking.openURL(detail.emailLinkingUrl);
+        onPress = () => Linking.canOpenURL(detail.emailLinkingUrl) && Linking.openURL(detail.emailLinkingUrl);
         break;
       case "BARCODE_TYPE_GEO":
         iconName = "map-marked";
@@ -75,7 +75,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
             ios: `${scheme}${label}@${latLng}`,
             android: `${scheme}${latLng}(${label})`,
           });
-          url && Linking.openURL(url);
+          url && Linking.canOpenURL(url) && Linking.openURL(url);
         };
         break;
       case "BARCODE_TYPE_PHONE":
@@ -83,7 +83,7 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
         iconType = "material";
         title = "Call";
         onPress = () => {
-          Linking.openURL(`tel:${detail.phoneNumber}`);
+          Linking.canOpenURL(`tel:${detail.phoneNumber}`) && Linking.openURL(`tel:${detail.phoneNumber}`);
         };
         break;
       case "BARCODE_TYPE_SMS":
@@ -155,7 +155,11 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
       <ListItem bottomDivider>
         <BarcodeTypeIcon />
         <ListItem.Content>
-          <ListItem.Title>{historyItem.type.split(".").pop()}</ListItem.Title>
+          <ListItem.Title>
+            {String(historyItem.type).includes(".")
+              ? String(historyItem.type).split(".").pop()
+              : "QR"}
+          </ListItem.Title>
           <ListItem.Subtitle style={styles.subtitle}>
             {historyItem.data}
           </ListItem.Subtitle>
