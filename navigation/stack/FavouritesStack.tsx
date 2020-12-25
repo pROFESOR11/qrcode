@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { CommonActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { View, StyleSheet } from "react-native";
@@ -27,11 +27,13 @@ const FavouritesStack: React.FC = () => {
           route: FavouritesScreenRouteProp;
         }) => ({
           headerRight: (props) => (
-            <FontAwesome5
+            <Icon
+              type="font-awesome-5"
               name="question-circle"
               size={30}
               color="white"
               style={styles.headerRightIcon}
+              onPress={() => navigation.dispatch(CommonActions.navigate("Faq"))}
             />
           ),
           headerLeft: (props) => (
