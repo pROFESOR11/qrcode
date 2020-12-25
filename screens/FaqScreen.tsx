@@ -2,6 +2,9 @@ import React from "react";
 import { Text, SafeAreaView, StyleSheet, View } from "react-native";
 import { Accordion } from "native-base";
 import theme from "../theme";
+import { useNavigation } from "@react-navigation/native";
+import { FaqScreenNavigationProp } from "../navigation/navigationTypes";
+import LinkText from "../components/LinkText";
 
 interface FaqScreenProps {}
 
@@ -44,6 +47,9 @@ const dataArray = [
 ];
 
 export const FaqScreen: React.FC<FaqScreenProps> = ({}) => {
+
+  const navigation = useNavigation<FaqScreenNavigationProp>()
+
   return (
     <SafeAreaView style={styles.container}>
       <Accordion
@@ -51,7 +57,7 @@ export const FaqScreen: React.FC<FaqScreenProps> = ({}) => {
         expanded={0}
         headerStyle={{ paddingHorizontal: 5 }}
         iconStyle={{ color: "blue" }}
-        renderContent={(item, index) => (
+        renderContent={(item: { title: String, content: String }) => (
           <View style={{ paddingHorizontal: 10, paddingBottom: 15  }}>
             <Text
               style={{
@@ -63,6 +69,30 @@ export const FaqScreen: React.FC<FaqScreenProps> = ({}) => {
           </View>
         )}
       />
+      <View
+          style={{
+            marginBottom: 20,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <LinkText
+            text={"Terms & Conditions"}
+            onPress={() =>
+              navigation.navigate("Docs", {
+                type: "terms",
+              })
+            }
+          />
+          <LinkText
+            text={"Privacy Policy"}
+            onPress={() =>
+              navigation.navigate("Docs", {
+                type: "privacy",
+              })
+            }
+          />
+        </View>
     </SafeAreaView>
   );
 };

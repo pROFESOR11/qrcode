@@ -57,4 +57,15 @@ export type FavouritesScreenNavigationProp = StackNavigationProp<
 
 export type FaqStackParamList = {
   Faq: undefined;
+  Docs: {
+    type: string;
+  };
 };
+
+export type FaqScreenNavigationProp = StackNavigationProp<FaqStackParamList, "Faq">
+
+export type DocsScreenRouteProp = RouteProp<FaqStackParamList, "Docs">;
+export type DocsScreenNavigationProp = StackNavigationProp<
+  FaqStackParamList,
+  "Docs"
+>;
