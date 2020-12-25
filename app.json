@@ -13,14 +13,29 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "android": {
+      "package": "com.team11.qrcode",
+      "googleServicesFile": "./config/google-services.json"
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "com.team11.qrcode",
+      "googleServicesFile": "./config/GoogleService-Info.plist",
       "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyBw61WYxuLbJeHya2E6S1jIPyWfE3LGyk8",
+          "authDomain": "qrcode-339e8.firebaseapp.com",
+          "projectId": "qrcode-339e8",
+          "storageBucket": "qrcode-339e8.appspot.com",
+          "messagingSenderId": "32330261850",
+          "appId": "1:32330261850:web:949af47f79ffde19c27f63",
+          "measurementId": "G-EKDT7RKGJD"
+        }
+      }
     }
   }
 }
