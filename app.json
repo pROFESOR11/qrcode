@@ -8,14 +8,22 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#4AA0DD"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
+    "primaryColor": "#4AA0DD",
     "android": {
       "package": "com.team11.qrcode",
-      "googleServicesFile": "./config/google-services.json"
+      "googleServicesFile": "./config/google-services.json",
+      "permissions": [
+        "CAMERA",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ]
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
