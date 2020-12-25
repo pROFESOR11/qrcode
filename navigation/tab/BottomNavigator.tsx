@@ -1,10 +1,11 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import HistoryStack from "../stack/HistoryStack";
 import ScannerStack from "../stack/ScannerStack";
 import FavouritesStack from "../stack/FavouritesStack";
 import theme from "../../theme";
+import FaqStack from "../stack/FaqStack";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -44,6 +45,15 @@ export function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <FontAwesome name="star" size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Faq"
+        component={FaqStack}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome5 name="question-circle" size={size} color={color} />
           ),
         }}
       />
