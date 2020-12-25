@@ -87,6 +87,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({}) => {
             autoCapitalize="none"
             autoCorrect={false}
             autoCompleteType="off"
+            clearIcon={{ color: "white" }}
             placeholderTextColor="white"
             searchIcon={
               <Icon name="search" type="feather" color="white" size={20} />
